@@ -212,6 +212,13 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 });
 
 
-app.listen(port, () => {
+// Start local server only when not running in a serverless environment
+if (!process.env.VERCEL && !process.env.NOW_REGION) {
+  app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
-});
+  });
+}
+
+// Export for Vercel serverless deployment.
+// @vercel/node uses module.exports when module is CommonJS.
+module.exports = app;
